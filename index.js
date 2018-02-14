@@ -15,6 +15,21 @@ const server = http.createServer(requestHandler)
 
 bot.start();
 
+// bot.on('/inlineKeyboard', msg => {
+//
+//     let replyMarkup = bot.inlineKeyboard([
+//         [
+//             bot.inlineButton('callback', {callback: 'this_is_data'}),
+//             bot.inlineButton('inline', {inline: 'some query'})
+//         ], [
+//             bot.inlineButton('url', {url: 'https://telegram.org'})
+//         ]
+//     ]);
+//
+//     return bot.sendMessage(msg.from.id, 'Inline keyboard example.', {replyMarkup});
+//
+// });
+
 bot.on([
   '/info', '/news', 'a'
 ], (msg) => {
@@ -30,13 +45,41 @@ bot.on([
       app = new1[i].split("<tr><td><p>")
       var body = app[1].split("</p><span>")
       title = striptags(title[0])
+      var uri = undefined
+      if (body[0].split("http")[1] != undefined && i<4) {
+        var uri = body[0].split("http")[1]
+        uri = uri.split('">')
+        uri = uri[0]
+        uri = uri.replace('\"', "")
+        // uri = striptags(uri[0])
+        console.log("URL " + uri);
+      }
       body = striptags(body[0]);
       body = body.replace(/&nbsp;/gi, " ")
       body = body.replace(/&ugrave;/gi, "ù")
       body = body.replace(/&bull;/gi, "•")
-      console.log(i +"" +title +"\n"+body);
-      msg.reply.text(title +"\n"+body);
-      bot.inlineButton("CIAO")
+      // console.log(i + "" + title + "\n" + body);
+
+      if (uri!=undefined) {
+      let replyMarkup = bot.inlineKeyboard([
+          [bot.inlineButton('url', {url: uri[0]})]
+        ]);
+
+        bot.sendMessage(msg.from.id, title + "\n" + body, {replyMarkup}).then((response) => {
+    console.log('Ok:', response);
+}).catch((error) => {
+    console.log('Error:', error);
+});
+
+      } else {
+
+        bot.sendMessage(msg.from.id, title + "\n" + body).then((response) => {
+    console.log('Ok:', response);
+}).catch((error) => {
+    console.log('Error:', error);
+});
+      }
+      // msg.reply.text(title +"\n"+body);
       i++
     }
   });
