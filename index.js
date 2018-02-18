@@ -14,26 +14,10 @@ const requestHandler = (request, response) => {
 const server = http.createServer(requestHandler)
 
 bot.start();
-// bot.on(['/start', '/hello'], (msg) => msg.reply.text('Welcome!'));
 bot.connect();
 
-// bot.on('/inlineKeyboard', msg => {
-//
-//     let replyMarkup = bot.inlineKeyboard([
-//         [
-//             bot.inlineButton('callback', {callback: 'this_is_data'}),
-//             bot.inlineButton('inline', {inline: 'some query'})
-//         ], [
-//             bot.inlineButton('url', {url: 'https://telegram.org'})
-//         ]
-//     ]);
-//
-//     return bot.sendMessage(msg.from.id, 'Inline keyboard example.', {replyMarkup});
-//
-// });
-
+// Start command
 bot.on('/start', msg => {
-
   let replyMarkup = bot.keyboard([
     [
       bot.button('contact', 'Your contact'),
@@ -41,59 +25,61 @@ bot.on('/start', msg => {
     ],
     [
       '/news', '/docenti'
-    ]
+    ],
+    ['/orari']
   ], {resize: true});
-
   return bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {replyMarkup});
-
 });
 
-bot.on('/docenti', msg => {
+// Lista degli orari
+bot.on('/orari', msg => {
+  let replyMarkup = bot.keyboard([
+    ['/primo'], ['/secondo'], ['/terzo']
+  ], {resize: true});
+  return bot.sendMessage(msg.from.id, 'Seleziona l\'anno del corso', {replyMarkup});
+});
 
+// Orario del primo
+bot.on('/primo', msg => {
+  request({
+    uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
+  }, function(error, response, body) {
+    body = body.replace(/&nbsp;/gi, " ")
+    body = body.replace('null', ' ')
+    body = body.split("\"><td align=right>")
+    b = body
+
+    i = 1;
+    while(b[i]!=undefined){
+      body = b[i].split("</td>")
+      
+      body = body[0]
+      console.log(striptags(body));
+      i++
+    }
+
+  })
+});
+
+// Lista dei docenti
+bot.on('/docenti', msg => {
   request({
     uri: "http://informatica.uniroma2.it/f0?fid=30&srv=4&cdl=0"
   }, function(error, response, body) {
-    // body = body.replace("<td>",'\n')
-    // body = body.replace("</td>",'\n')
-    // console.log(body);
-
     body = body.replace(/&nbsp;/gi, " ")
     body = body.replace('null', ' ')
     body = body.split("<td><a href=\"#\" onMouseOver=f2('null') onMouseOut=f1()>")
-    i=1;
-    while(body[i]!=undefined){
-      bot.sendMessage(msg.from.id, striptags(body[i]) )
-      // console.log(striptags(body[i]));
+    i = 1;
+    while (body[i] != undefined) {
+      bot.sendMessage(msg.from.id, striptags(body[i]))
       i++
     }
-    //
-    // console.log(striptags(body[1]));
-    // console.log(striptags(body[2]));
-    // console.log(striptags(body[3]));
-    // console.log(striptags(body[4]));
-    // console.log(striptags(body[5]));
-    // console.log(striptags(body[6]));
-    // console.log(striptags(body[7]));
-    // console.log(striptags(body[8]));
-    // console.log(striptags(body[9]));
-    // console.log(striptags(body[10]));
-    // console.log(striptags(body[11]));
-    // console.log(striptags(body[12]));
-
-    // while (body != undefined) {
-    //   i++
-    //   body = body.split("<td><a href=\"#\" onMouseOver=f2('null') onMouseOut=f1()>")[i]
-    //   // body2 = body.split(" </a></td><td>")[0]
-    //
-    //   body = body.replace(/&nbsp;/gi, " ")
-    //   console.log(striptags(body));
-    // }
   })
-
 });
 
+// Novita'
 bot.on([
-  '/info', '/news', 'a'
+  '/news'
 ], (msg) => {
   request({
     uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
@@ -114,28 +100,21 @@ bot.on([
         uri = uri[0]
         uri = uri.replace('\"', "")
         uri = "https" + uri
-        // uri = striptags(uri[0])
-        // console.log("URL " + uri);
       } else if (body[0].split("http")[1] != undefined && i < 4) {
         var uri = body[0].split("http")[1]
         uri = uri.split('">')
         uri = uri[0]
         uri = uri.replace('\"', "")
         uri = "http" + uri
-        // uri = striptags(uri[0])
-        // console.log("URL " + uri);
       }
       body = striptags(body[0]);
       body = body.replace(/&nbsp;/gi, " ")
       body = body.replace(/&ugrave;/gi, "ù")
       body = body.replace(/&bull;/gi, "•")
-      // console.log(i + "" + title + "\n" + body);
-
       if (uri != undefined) {
         let replyMarkup = bot.inlineKeyboard([
           [bot.inlineButton('url', {url: uri})]
         ]);
-        // console.log(uri);
         uri = uri.split(" target")
         uri = uri[0]
         console.log(uri);
@@ -147,16 +126,9 @@ bot.on([
         });
 
       } else {
-
-        bot.sendMessage(msg.from.id, title + "\n" + body).then((response) => {
-          // console.log('Ok:', response);
-        }).catch((error) => {
-          // console.log('Error:', error);
-        });
+        bot.sendMessage(msg.from.id, title + "\n" + body).then((response) => {}).catch((error) => {});
       }
-      // msg.reply.text(title +"\n"+body);
       i++
     }
   });
-
 });
