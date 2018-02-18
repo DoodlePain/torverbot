@@ -20,10 +20,6 @@ bot.connect();
 bot.on('/start', msg => {
   let replyMarkup = bot.keyboard([
     [
-      bot.button('contact', 'Your contact'),
-      bot.button('location', 'Your location')
-    ],
-    [
       '/news', '/docenti'
     ],
     ['/orari']
@@ -31,10 +27,22 @@ bot.on('/start', msg => {
   return bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {replyMarkup});
 });
 
+bot.on('/menu', msg =>{
+
+    let replyMarkup = bot.keyboard([
+      [
+        '/news', '/docenti'
+      ],
+      ['/orari']
+    ], {resize: true});
+    return bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {replyMarkup});
+});
+
+
 // Lista degli orari
 bot.on('/orari', msg => {
   let replyMarkup = bot.keyboard([
-    ['/primo'], ['/secondo'], ['/terzo']
+    ['/primo'], ['/secondo'], ['/terzo'],["/menu"]
   ], {resize: true});
   return bot.sendMessage(msg.from.id, 'Seleziona l\'anno del corso', {replyMarkup});
 });
@@ -52,7 +60,7 @@ bot.on('/primo', msg => {
     i = 1;
     while(b[i]!=undefined){
       body = b[i].split("</td>")
-      
+
       body = body[0]
       console.log(striptags(body));
       i++
