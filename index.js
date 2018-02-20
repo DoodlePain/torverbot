@@ -136,7 +136,9 @@ bot.on(/\Primo/, msg => {
         app4.push(body4);
         body5 = bodya[5];
         body5 = body5.split(">");
-        if(body5[2]!=''){
+        if(body5[2] == "</tr"){
+          body5[2] = ''
+        } if(body5[2]!=''){
           body5 = "\n" + ore[i-1]+"" +body5[2].replace("</a","");
         } else {
           body5 = "\n" + ore[i-1]+"" + "Nulla"
@@ -144,11 +146,13 @@ bot.on(/\Primo/, msg => {
         app5.push(body5);
       }
     orario.push(app,app2,app3,app4,app5);
-    bot.sendMessage(msg.from.id,"Lunedi' :\n"+orario[0]).then(()=>{
-      return bot.sendMessage(msg.from.id,"Martedi' :\n"+orario[1]).then(()=>{
-        return bot.sendMessage(msg.from.id,"Mercoledi' :\n"+orario[2]).then(()=>{
-          return bot.sendMessage(msg.from.id,"Giovedi' :\n"+orario[3]).then(()=>{
-            return bot.sendMessage(msg.from.id,"Venerdi' :\n"+orario[4])
+    let parseMode = 'html';
+    bot.sendMessage(msg.from.id,"<b>Lunedi</b>' :"+orario[0], {parseMode}).then(()=>{
+      return bot.sendMessage(msg.from.id,"<b>Martedi'</b> :"+orario[1], {parseMode}).then(()=>{
+        return bot.sendMessage(msg.from.id,"<b>Mercoledi'</b> :"+orario[2], {parseMode}).then(()=>{
+          return bot.sendMessage(msg.from.id,"<b>Giovedi'</b> :"+orario[3], {parseMode}).then(()=>{
+            return bot.sendMessage(msg.from.id,"<b>Venerdi'</b> :"+orario[4], {parseMode})
+
           })
         })
       })
@@ -207,6 +211,9 @@ bot.on(/\bSecondo/, msg => {
         app4.push(body4);
         body5 = bodya[5];
         body5 = body5.split(">");
+        if(body5[2] == "</tr"){
+          body5[2] = ''
+        }
         if(body5[2]!=''){
           body5 = "\n" + ore[i-11]+"" +body5[2].replace("</a","");
         } else {
@@ -215,11 +222,12 @@ bot.on(/\bSecondo/, msg => {
         app5.push(body5);
       }
     orario.push(app,app2,app3,app4,app5);
-    bot.sendMessage(msg.from.id,"Lunedi' :\n"+orario[0]).then(()=>{
-      return bot.sendMessage(msg.from.id,"Martedi' :\n"+orario[1]).then(()=>{
-        return bot.sendMessage(msg.from.id,"Mercoledi' :\n"+orario[2]).then(()=>{
-          return bot.sendMessage(msg.from.id,"Giovedi' :\n"+orario[3]).then(()=>{
-            return bot.sendMessage(msg.from.id,"Venerdi' :\n"+orario[4])
+    let parseMode = 'html';
+    bot.sendMessage(msg.from.id,"<b>Lunedi</b>' :"+orario[0], {parseMode}).then(()=>{
+      return bot.sendMessage(msg.from.id,"<b>Martedi'</b> :"+orario[1], {parseMode}).then(()=>{
+        return bot.sendMessage(msg.from.id,"<b>Mercoledi'</b> :"+orario[2], {parseMode}).then(()=>{
+          return bot.sendMessage(msg.from.id,"<b>Giovedi'</b> :"+orario[3], {parseMode}).then(()=>{
+            return bot.sendMessage(msg.from.id,"<b>Venerdi'</b> :"+orario[4], {parseMode})
           })
         })
       })
@@ -278,6 +286,9 @@ bot.on(/\bTerzo/, msg => {
         app4.push(body4);
         body5 = bodya[5];
         body5 = body5.split(">");
+        if(body5[2] == "</tr"){
+          body5[2] = ''
+        }
         if(body5[2]!=''){
           body5 = "\n" + ore[i-21]+"" +body5[2].replace("</a","");
         } else {
@@ -286,11 +297,12 @@ bot.on(/\bTerzo/, msg => {
         app5.push(body5);
       }
     orario.push(app,app2,app3,app4,app5);
-    bot.sendMessage(msg.from.id,"Lunedi' :\n"+orario[0]).then(()=>{
-      return bot.sendMessage(msg.from.id,"Martedi' :\n"+orario[1]).then(()=>{
-        return bot.sendMessage(msg.from.id,"Mercoledi' :\n"+orario[2]).then(()=>{
-          return bot.sendMessage(msg.from.id,"Giovedi' :\n"+orario[3]).then(()=>{
-            return bot.sendMessage(msg.from.id,"Venerdi' :\n"+orario[4])
+    let parseMode = 'html';
+    bot.sendMessage(msg.from.id,"<b>Lunedi</b>' :"+orario[0], {parseMode}).then(()=>{
+      return bot.sendMessage(msg.from.id,"<b>Martedi'</b> :"+orario[1], {parseMode}).then(()=>{
+        return bot.sendMessage(msg.from.id,"<b>Mercoledi'</b> :"+orario[2], {parseMode}).then(()=>{
+          return bot.sendMessage(msg.from.id,"<b>Giovedi'</b> :"+orario[3], {parseMode}).then(()=>{
+            return bot.sendMessage(msg.from.id,"<b>Venerdi'</b> :"+orario[4], {parseMode})
           })
         })
       })
@@ -300,7 +312,33 @@ bot.on(/\bTerzo/, msg => {
 
 docs = (body, i,msg) => {
   if(body[i]!=undefined){
-    bot.sendMessage(msg.from.id, striptags(body[i])).then(()=> {return docs(body, i+1,msg)})
+    var name = striptags(body[i].split("<td>")[0]);
+    var ruolo = striptags(body[i].split("<td>")[1]);
+    var ufficio = striptags(body[i].split("<td>")[2])
+    var telefono = striptags(body[i].split("<td>")[3])
+    if(telefono[0]!="+" && telefono[0]!="n" && telefono[0]!=" "){
+      // console.log("ISOPI");
+      telefono = "+39"+telefono
+    }
+    var mail = body[i].split("<td>")[3]
+    var mail = mail.split("@")
+    mail1 = mail[0].split(":")[2]
+    if(mail[1]!=undefined)
+    {mail2 = mail[1].split("  '")[0]
+    mail = mail1+""+mail2}
+    else {
+      mail = "Non definita"
+    }
+    console.log(mail)
+    telefono = telefono.replace("-","")
+    telefono = telefono.replace("-","")
+    telefono = telefono.replace(".","")
+    telefono = telefono.replace(" ","")
+    telefono = telefono.replace(" ","")
+    var materia = striptags(body[i].split("<td>")[4])
+    // console.log(body[i].split("<td>")[3]);
+    let parseMode = 'html';
+    bot.sendMessage(msg.from.id, "<b>" +name + "</b> \nRuolo : "+ ruolo +"\nStudio : "+ufficio+"\nTelefono : " +telefono +"\nMateria : "+materia+"\nEmail : "+mail, {parseMode}).then(()=> {return docs(body, i+1,msg)})
   }
 }
 
