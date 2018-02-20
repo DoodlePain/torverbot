@@ -45,7 +45,7 @@ bot.on(/\bMenu/, msg =>{
 // Lista degli orari
 bot.on(/\bOrario/, msg => {
   let replyMarkup = bot.keyboard([
-    [emoji.blue_heart +' Primo'], [emoji.green_heart +' Secondo'], [emoji.yellow_heart +' Terzo'],[emoji.rewind+" Menu"]
+    [emoji.new_moon +' Primo'], [emoji.first_quarter_moon +' Secondo'], [emoji.full_moon +' Terzo'],[emoji.rewind+" Menu"]
   ], {resize: true});
   return bot.sendMessage(msg.from.id, 'Seleziona l\'anno del corso', {replyMarkup});
 });
