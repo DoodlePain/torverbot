@@ -2,9 +2,11 @@ const http = require('http')
 const port = 3000
 var request = require("request");
 var striptags = require('striptags');
-
+var emoji = require('node-emoji').emoji;
 const TeleBot = require('telebot');
 const bot = new TeleBot('371457888:AAFPcUPqD8ki1vPOEem8P75L1pZdpBbuaCc');
+
+let rain = 'u\U00002614' ;
 
 const requestHandler = (request, response) => {
   console.log(request.url)
@@ -20,35 +22,71 @@ bot.connect();
 bot.on('/start', msg => {
   let replyMarkup = bot.keyboard([
     [
-      '/news', '/docenti'
+      emoji.envelope_with_arrow +' News', emoji.book+' Docenti'
     ],
-    ['/orari']
+    [emoji.clock1 +' Orario']
   ], {resize: true});
   return bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {replyMarkup});
 });
 
-bot.on('/menu', msg =>{
+bot.on(/\bMenu/, msg =>{
 
     let replyMarkup = bot.keyboard([
       [
-        '/news', '/docenti'
-      ],
-      ['/orari']
+        emoji.envelope_with_arrow+' News', emoji.book+' Docenti'
+      ],[emoji.clock1+' Orario']
     ], {resize: true});
     return bot.sendMessage(msg.from.id, 'Qui trovi tutto quello che cerchi.', {replyMarkup});
 });
 
 
+
+
 // Lista degli orari
-bot.on('/orari', msg => {
+bot.on(/\bOrario/, msg => {
   let replyMarkup = bot.keyboard([
-    ['/primo'], ['/secondo'], ['/terzo'],["/menu"]
+    [emoji.blue_heart +' Primo'], [emoji.green_heart +' Secondo'], [emoji.yellow_heart +' Terzo'],[emoji.rewind+" Menu"]
   ], {resize: true});
   return bot.sendMessage(msg.from.id, 'Seleziona l\'anno del corso', {replyMarkup});
 });
 
+
+// bot.on('/time', msg => {
+//
+//     return bot.sendMessage(msg.from.id, 'Getting time...').then(re => {
+//         // Start updating message
+//         updateTime(msg.from.id, re.result.message_id);
+//     });
+//
+// });
+//
+// function updateTime(chatId, messageId) {
+//
+//     // Update every second
+//     setInterval(() => {
+//         bot.editMessageText(
+//             {chatId, messageId}, `<b>Current time:</b> ${ time() }`,
+//             {parseMode: 'html'}
+//         ).catch(error => console.log('Error:', error));
+//     }, 1000);
+//
+// }
+//
+// function time() {
+//     return new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, '$1');
+// }
+
+
+// Mod every text message
+// bot.mod('/orari', data => {
+//     const msg = data.message;
+//     msg.text = emoji.heart +` ${ msg.text }`;
+//     return data;
+// });
+
+
 // Orario del primo
-bot.on('/primo', msg => {
+bot.on(/\Primo/, msg => {
   request({
     uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
   }, function(error, response, body) {
@@ -119,7 +157,7 @@ bot.on('/primo', msg => {
 });
 
 // Orario del secondo
-bot.on('/secondo', msg => {
+bot.on(/\bSecondo/, msg => {
   request({
     uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
   }, function(error, response, body) {
@@ -190,7 +228,7 @@ bot.on('/secondo', msg => {
 });
 
 // Orario del terzo
-bot.on('/terzo', msg => {
+bot.on(/\bTerzo/, msg => {
   request({
     uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
   }, function(error, response, body) {
@@ -260,8 +298,14 @@ bot.on('/terzo', msg => {
   })
 });
 
+docs = (body, i,msg) => {
+  if(body[i]!=undefined){
+    bot.sendMessage(msg.from.id, striptags(body[i])).then(()=> {return docs(body, i+1,msg)})
+  }
+}
+
 // Lista dei docenti
-bot.on('/docenti', msg => {
+bot.on(/\bDocenti/, msg => {
   request({
     uri: "http://informatica.uniroma2.it/f0?fid=30&srv=4&cdl=0"
   }, function(error, response, body) {
@@ -269,16 +313,17 @@ bot.on('/docenti', msg => {
     body = body.replace('null', ' ')
     body = body.split("<td><a href=\"#\" onMouseOver=f2('null') onMouseOut=f1()>")
     i = 1;
-    while (body[i] != undefined) {
-      bot.sendMessage(msg.from.id, striptags(body[i]))
-      i++
-    }
+    // while (body[i] != undefined) {
+      // bot.sendMessage(msg.from.id, striptags(body[i]))
+      // i++
+    // }
+    docs(body,i,msg)
   })
 });
 
 // Novita'
 bot.on([
-  '/news'
+  /\bNews/
 ], (msg) => {
   request({
     uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
