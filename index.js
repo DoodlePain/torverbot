@@ -6,17 +6,16 @@ var emoji = require('node-emoji').emoji;
 const TeleBot = require('telebot');
 const bot = new TeleBot('371457888:AAFPcUPqD8ki1vPOEem8P75L1pZdpBbuaCc');
 
-let rain = 'u\U00002614' ;
 
 const requestHandler = (request, response) => {
-  console.log(request.url)
+  // console.log(request.url)
   response.end('Hello Node.js Server!')
 }
 
 const server = http.createServer(requestHandler)
 
 bot.start();
-bot.connect();
+// bot.connect();
 
 // Start command
 bot.on('/start', msg => {
@@ -329,7 +328,7 @@ docs = (body, i,msg) => {
     else {
       mail = "Non definita"
     }
-    console.log(mail)
+    // console.log(mail)
     telefono = telefono.replace("-","")
     telefono = telefono.replace("-","")
     telefono = telefono.replace(".","")
@@ -399,12 +398,12 @@ bot.on([
         ]);
         uri = uri.split(" target")
         uri = uri[0]
-        console.log(uri);
+        // console.log(uri);
         bot.sendMessage(msg.from.id, title + "\n" + body, {replyMarkup}).then((response) => {
-          console.log('Ok:', response);
+          // console.log('Ok:', response);
         }).catch((error) => {
-          console.log("\n" + uri);
-          console.log('Error:', error);
+          // console.log("\n" + uri);
+          // console.log('Error:', error);
         });
 
       } else {
