@@ -58,3 +58,6 @@ typings/
 .env
 
 #add 'node_modules' to .gitignore file
+
+#add 'Server' to .gitignore file
+Server/*

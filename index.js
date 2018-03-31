@@ -1,415 +1,84 @@
-const http = require('http')
-const port = 3000
 var request = require("request");
 var striptags = require('striptags');
-var emoji = require('node-emoji').emoji;
 const TeleBot = require('telebot');
 const bot = new TeleBot('371457888:AAFPcUPqD8ki1vPOEem8P75L1pZdpBbuaCc');
-
-
-const requestHandler = (request, response) => {
-  // console.log(request.url)
-  response.end('Hello Node.js Server!')
-}
-
-const server = http.createServer(requestHandler)
+const Start = require('./Calls/start.js');
+const News = require('./Calls/News/news.js');
+const Menu = require('./Calls/menu.js');
+const Schedule = require('./Calls/Schedule/scheduleManager.js');
+const First = require('./Calls/Schedule/first.js');
+const Second = require('./Calls/Schedule/second.js');
+const Third = require('./Calls/Schedule/third.js');
+const Prof = require('./Calls/Prof/list.js');
+const Summer = require('./Calls/Exams/Session/summer.js');
+const eSummer = require('./Calls/Exams/Session/esummer.js');
+const Winter = require('./Calls/Exams/Session/winter.js');
+const Autumn = require('./Calls/Exams/Session/autumn.js');
+const Chooser = require('./Calls/Exams/chooser.js');
 
 bot.start();
-// bot.connect();
 
 // Start command
 bot.on('/start', msg => {
-  let replyMarkup = bot.keyboard([
-    [
-      emoji.envelope_with_arrow +' News', emoji.book+' Docenti'
-    ],
-    [emoji.clock1 +' Orario']
-  ], {resize: true});
-  return bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {replyMarkup});
+  return Start.start(msg);
 });
 
+// Menu
 bot.on(/\bMenu/, msg =>{
-
-    let replyMarkup = bot.keyboard([
-      [
-        emoji.envelope_with_arrow+' News', emoji.book+' Docenti'
-      ],[emoji.clock1+' Orario']
-    ], {resize: true});
-    return bot.sendMessage(msg.from.id, 'Qui trovi tutto quello che cerchi.', {replyMarkup});
+  return Menu.menu(msg);
 });
-
-
-
 
 // Lista degli orari
 bot.on(/\bOrario/, msg => {
-  let replyMarkup = bot.keyboard([
-    [emoji.new_moon +' Primo'], [emoji.first_quarter_moon +' Secondo'], [emoji.full_moon +' Terzo'],[emoji.rewind+" Menu"]
-  ], {resize: true});
-  return bot.sendMessage(msg.from.id, 'Seleziona l\'anno del corso', {replyMarkup});
+  return Schedule.schedule(msg);
 });
-
-
-// bot.on('/time', msg => {
-//
-//     return bot.sendMessage(msg.from.id, 'Getting time...').then(re => {
-//         // Start updating message
-//         updateTime(msg.from.id, re.result.message_id);
-//     });
-//
-// });
-//
-// function updateTime(chatId, messageId) {
-//
-//     // Update every second
-//     setInterval(() => {
-//         bot.editMessageText(
-//             {chatId, messageId}, `<b>Current time:</b> ${ time() }`,
-//             {parseMode: 'html'}
-//         ).catch(error => console.log('Error:', error));
-//     }, 1000);
-//
-// }
-//
-// function time() {
-//     return new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, '$1');
-// }
-
-
-// Mod every text message
-// bot.mod('/orari', data => {
-//     const msg = data.message;
-//     msg.text = emoji.heart +` ${ msg.text }`;
-//     return data;
-// });
-
 
 // Orario del primo
 bot.on(/\Primo/, msg => {
-  request({
-    uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
-  }, function(error, response, body) {
-    var orario=[];
-    body = body. split("00</td>");
-    var app  = [];
-    var app2  = [];
-    var app3  = [];
-    var app4  = [];
-    var app5  = [];
-    var ore = ["9:00 : ","10:00 : ","11:00 : ","12:00 : ","13:00 : ","14:00 : ","15:00 : ","16:00 : ","17:00 : ","18:00 : "]
-      for(i = 1;i<11;i++){
-        bodya = body[i].split("</tr><tr style=\"")
-        bodya = bodya[0];
-        bodya = bodya.split("<td");
-        body1 = bodya[1];
-        body1 = body1.split(">");
-        if(body1[2]!=''){
-          body1 = "\n" + ore[i-1]+"" +body1[2].replace("</a","");
-        } else {
-          body1 = "\n" + ore[i-1]+"" + "Nulla"
-        }
-        app.push(body1);
-        body2 = bodya[2];
-        body2 = body2.split(">");
-        if(body2[2]!=''){
-          body2 = "\n" + ore[i-1]+"" +body2[2].replace("</a","");
-        } else {
-          body2 = "\n" + ore[i-1]+"" + "Nulla"
-        }
-        app2.push(body2);
-        body3 = bodya[3];
-        body3 = body3.split(">");
-        if(body3[2]!=''){
-          body3 = "\n" + ore[i-1]+"" +body3[2].replace("</a","");
-        } else {
-          body3 = "\n" + ore[i-1]+"" + "Nulla"
-        }
-        app3.push(body3);
-        body4 = bodya[4];
-        body4 = body4.split(">");
-        if(body4[2]!=''){
-          body4 = "\n" + ore[i-1]+"" +body4[2].replace("</a","");
-        } else {
-          body4 = "\n" + ore[i-1]+"" + "Nulla"
-        }
-        app4.push(body4);
-        body5 = bodya[5];
-        body5 = body5.split(">");
-        if(body5[2] == "</tr"){
-          body5[2] = ''
-        } if(body5[2]!=''){
-          body5 = "\n" + ore[i-1]+"" +body5[2].replace("</a","");
-        } else {
-          body5 = "\n" + ore[i-1]+"" + "Nulla"
-        }
-        app5.push(body5);
-      }
-    orario.push(app,app2,app3,app4,app5);
-    let parseMode = 'html';
-    bot.sendMessage(msg.from.id,"<b>Lunedi</b>' :"+orario[0], {parseMode}).then(()=>{
-      return bot.sendMessage(msg.from.id,"<b>Martedi'</b> :"+orario[1], {parseMode}).then(()=>{
-        return bot.sendMessage(msg.from.id,"<b>Mercoledi'</b> :"+orario[2], {parseMode}).then(()=>{
-          return bot.sendMessage(msg.from.id,"<b>Giovedi'</b> :"+orario[3], {parseMode}).then(()=>{
-            return bot.sendMessage(msg.from.id,"<b>Venerdi'</b> :"+orario[4], {parseMode})
-
-          })
-        })
-      })
-    })
-  })
+  First.list(msg);
 });
 
 // Orario del secondo
 bot.on(/\bSecondo/, msg => {
-  request({
-    uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
-  }, function(error, response, body) {
-    var orario=[];
-    body = body. split("00</td>");
-    var app  = [];
-    var app2  = [];
-    var app3  = [];
-    var app4  = [];
-    var app5  = [];
-    var ore = ["9:00 : ","10:00 : ","11:00 : ","12:00 : ","13:00 : ","14:00 : ","15:00 : ","16:00 : ","17:00 : ","18:00 : "]
-      for(i = 11;i<21;i++){
-        bodya = body[i].split("</tr><tr style=\"")
-        bodya = bodya[0];
-        bodya = bodya.split("<td");
-        body1 = bodya[1];
-        body1 = body1.split(">");
-        if(body1[2]!=''){
-          body1 = "\n" + ore[i-11]+"" +body1[2].replace("</a","");
-        } else {
-          body1 = "\n" + ore[i-11]+"" + "Nulla"
-        }
-        app.push(body1);
-        body2 = bodya[2];
-        body2 = body2.split(">");
-        if(body2[2]!=''){
-          body2 = "\n" + ore[i-11]+"" +body2[2].replace("</a","");
-        } else {
-          body2 = "\n" + ore[i-11]+"" + "Nulla"
-        }
-        app2.push(body2);
-        body3 = bodya[3];
-        body3 = body3.split(">");
-        if(body3[2]!=''){
-          body3 = "\n" + ore[i-11]+"" +body3[2].replace("</a","");
-        } else {
-          body3 = "\n" + ore[i-11]+"" + "Nulla"
-        }
-        app3.push(body3);
-        body4 = bodya[4];
-        body4 = body4.split(">");
-        if(body4[2]!=''){
-          body4 = "\n" + ore[i-11]+"" +body4[2].replace("</a","");
-        } else {
-          body4 = "\n" + ore[i-11]+"" + "Nulla"
-        }
-        app4.push(body4);
-        body5 = bodya[5];
-        body5 = body5.split(">");
-        if(body5[2] == "</tr"){
-          body5[2] = ''
-        }
-        if(body5[2]!=''){
-          body5 = "\n" + ore[i-11]+"" +body5[2].replace("</a","");
-        } else {
-          body5 = "\n" + ore[i-11]+"" + "Nulla"
-        }
-        app5.push(body5);
-      }
-    orario.push(app,app2,app3,app4,app5);
-    let parseMode = 'html';
-    bot.sendMessage(msg.from.id,"<b>Lunedi</b>' :"+orario[0], {parseMode}).then(()=>{
-      return bot.sendMessage(msg.from.id,"<b>Martedi'</b> :"+orario[1], {parseMode}).then(()=>{
-        return bot.sendMessage(msg.from.id,"<b>Mercoledi'</b> :"+orario[2], {parseMode}).then(()=>{
-          return bot.sendMessage(msg.from.id,"<b>Giovedi'</b> :"+orario[3], {parseMode}).then(()=>{
-            return bot.sendMessage(msg.from.id,"<b>Venerdi'</b> :"+orario[4], {parseMode})
-          })
-        })
-      })
-    })
-  })
+  Second.list(msg);
 });
 
 // Orario del terzo
 bot.on(/\bTerzo/, msg => {
-  request({
-    uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
-  }, function(error, response, body) {
-    var orario=[];
-    body = body. split("00</td>");
-    var app  = [];
-    var app2  = [];
-    var app3  = [];
-    var app4  = [];
-    var app5  = [];
-    var ore = ["9:00 : ","10:00 : ","11:00 : ","12:00 : ","13:00 : ","14:00 : ","15:00 : ","16:00 : ","17:00 : ","18:00 : "]
-      for(i = 21;i<31;i++){
-        bodya = body[i].split("</tr><tr style=\"")
-        bodya = bodya[0];
-        bodya = bodya.split("<td");
-        body1 = bodya[1];
-        body1 = body1.split(">");
-        if(body1[2]!=''){
-          body1 = "\n" + ore[i-21]+"" +body1[2].replace("</a","");
-        } else {
-          body1 = "\n" + ore[i-21]+"" + "Nulla"
-        }
-        app.push(body1);
-        body2 = bodya[2];
-        body2 = body2.split(">");
-        if(body2[2]!=''){
-          body2 = "\n" + ore[i-21]+"" +body2[2].replace("</a","");
-        } else {
-          body2 = "\n" + ore[i-21]+"" + "Nulla"
-        }
-        app2.push(body2);
-        body3 = bodya[3];
-        body3 = body3.split(">");
-        if(body3[2]!=''){
-          body3 = "\n" + ore[i-21]+"" +body3[2].replace("</a","");
-        } else {
-          body3 = "\n" + ore[i-21]+"" + "Nulla"
-        }
-        app3.push(body3);
-        body4 = bodya[4];
-        body4 = body4.split(">");
-        if(body4[2]!=''){
-          body4 = "\n" + ore[i-21]+"" +body4[2].replace("</a","");
-        } else {
-          body4 = "\n" + ore[i-21]+"" + "Nulla"
-        }
-        app4.push(body4);
-        body5 = bodya[5];
-        body5 = body5.split(">");
-        if(body5[2] == "</tr"){
-          body5[2] = ''
-        }
-        if(body5[2]!=''){
-          body5 = "\n" + ore[i-21]+"" +body5[2].replace("</a","");
-        } else {
-          body5 = "\n" + ore[i-21]+"" + "Nulla"
-        }
-        app5.push(body5);
-      }
-    orario.push(app,app2,app3,app4,app5);
-    let parseMode = 'html';
-    bot.sendMessage(msg.from.id,"<b>Lunedi</b>' :"+orario[0], {parseMode}).then(()=>{
-      return bot.sendMessage(msg.from.id,"<b>Martedi'</b> :"+orario[1], {parseMode}).then(()=>{
-        return bot.sendMessage(msg.from.id,"<b>Mercoledi'</b> :"+orario[2], {parseMode}).then(()=>{
-          return bot.sendMessage(msg.from.id,"<b>Giovedi'</b> :"+orario[3], {parseMode}).then(()=>{
-            return bot.sendMessage(msg.from.id,"<b>Venerdi'</b> :"+orario[4], {parseMode})
-          })
-        })
-      })
-    })
-  })
+  Third.list(msg);
 });
-
-docs = (body, i,msg) => {
-  if(body[i]!=undefined){
-    var name = striptags(body[i].split("<td>")[0]);
-    var ruolo = striptags(body[i].split("<td>")[1]);
-    var ufficio = striptags(body[i].split("<td>")[2])
-    var telefono = striptags(body[i].split("<td>")[3])
-    if(telefono[0]!="+" && telefono[0]!="n" && telefono[0]!=" "){
-      // console.log("ISOPI");
-      telefono = "+39"+telefono
-    }
-    var mail = body[i].split("<td>")[3]
-    var mail = mail.split("@")
-    mail1 = mail[0].split(":")[2]
-    if(mail[1]!=undefined)
-    {mail2 = mail[1].split("  '")[0]
-    mail = mail1+""+mail2}
-    else {
-      mail = "Non definita"
-    }
-    // console.log(mail)
-    telefono = telefono.replace("-","")
-    telefono = telefono.replace("-","")
-    telefono = telefono.replace(".","")
-    telefono = telefono.replace(" ","")
-    telefono = telefono.replace(" ","")
-    var materia = striptags(body[i].split("<td>")[4])
-    // console.log(body[i].split("<td>")[3]);
-    let parseMode = 'html';
-    bot.sendMessage(msg.from.id, "<b>" +name + "</b> \nRuolo : "+ ruolo +"\nStudio : "+ufficio+"\nTelefono : " +telefono +"\nMateria : "+materia+"\nEmail : "+mail, {parseMode}).then(()=> {return docs(body, i+1,msg)})
-  }
-}
 
 // Lista dei docenti
 bot.on(/\bDocenti/, msg => {
-  request({
-    uri: "http://informatica.uniroma2.it/f0?fid=30&srv=4&cdl=0"
-  }, function(error, response, body) {
-    body = body.replace(/&nbsp;/gi, " ")
-    body = body.replace('null', ' ')
-    body = body.split("<td><a href=\"#\" onMouseOver=f2('null') onMouseOut=f1()>")
-    i = 1;
-    // while (body[i] != undefined) {
-      // bot.sendMessage(msg.from.id, striptags(body[i]))
-      // i++
-    // }
-    docs(body,i,msg)
-  })
+  Prof.list(msg);
 });
 
 // Novita'
-bot.on([
-  /\bNews/
-], (msg) => {
-  request({
-    uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
-  }, function(error, response, body) {
+bot.on(/\bNews/, msg => {
+  News.news(msg)
+});
 
-    var new1 = body.split("<table>")
-    var i = 1
-    while (new1[i] != undefined) {
-      var app = new1[i].split("<img src=/images/new.gif>&nbsp;")
-      var title = app[1].split("<br>")
-      app = new1[i].split("<tr><td><p>")
-      var body = app[1].split("</p><span>")
-      title = striptags(title[0])
-      var uri = undefined
-      if (body[0].split("https")[1] != undefined && i < 4) {
-        var uri = body[0].split("https")[1]
-        uri = uri.split('">')
-        uri = uri[0]
-        uri = uri.replace('\"', "")
-        uri = "https" + uri
-      } else if (body[0].split("http")[1] != undefined && i < 4) {
-        var uri = body[0].split("http")[1]
-        uri = uri.split('">')
-        uri = uri[0]
-        uri = uri.replace('\"', "")
-        uri = "http" + uri
-      }
-      body = striptags(body[0]);
-      body = body.replace(/&nbsp;/gi, " ")
-      body = body.replace(/&ugrave;/gi, "ù")
-      body = body.replace(/&bull;/gi, "•")
-      if (uri != undefined) {
-        let replyMarkup = bot.inlineKeyboard([
-          [bot.inlineButton('url', {url: uri})]
-        ]);
-        uri = uri.split(" target")
-        uri = uri[0]
-        // console.log(uri);
-        bot.sendMessage(msg.from.id, title + "\n" + body, {replyMarkup}).then((response) => {
-          // console.log('Ok:', response);
-        }).catch((error) => {
-          // console.log("\n" + uri);
-          // console.log('Error:', error);
-        });
+// Novita'
+bot.on(/\bEsami/, msg => {
+  Chooser.chooser(msg);
+});
 
-      } else {
-        bot.sendMessage(msg.from.id, title + "\n" + body).then((response) => {}).catch((error) => {});
-      }
-      i++
-    }
-  });
+// Estiva
+bot.on(/\bEstiva/, msg => {
+  Summer.list(msg);
+});
+
+// Anticipata
+bot.on(/\bAnticipata/, msg => {
+  eSummer.list(msg);
+});
+
+// Invernale
+bot.on(/\bInvernale/, msg => {
+  Winter.list(msg);
+});
+
+// Autunnale
+bot.on(/\bAutunnale/, msg => {
+  Autumn.list(msg);
 });
