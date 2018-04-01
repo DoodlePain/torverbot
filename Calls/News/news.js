@@ -1,6 +1,7 @@
 const bot = require('../../Server/config.js');
 var request = require("request");
 var striptags = require('striptags');
+var fs = require('fs');
 
 module.exports = {
   news: function(msg){
@@ -9,6 +10,30 @@ module.exports = {
     request({
       uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
     }, function(error, response, body) {
+
+      // File module
+
+      if(error){
+        console.log("File reading");
+        body = fs.readFile('./Calls/News/oldNews.txt',function(err,data){
+          if(err){
+            return console.log("File read "+err);
+          }
+          else {
+            console.log("File read end");
+            return data;
+          }
+        })
+      }
+      console.log("File writing");
+      fs.writeFile('./Calls/News/oldNews.txt',body, function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+      });
+      console.log("File write end");
+
+      // File module end
+
       var new1 = body.split("<table>")
       var i = 1
       while (new1[i] != undefined) {

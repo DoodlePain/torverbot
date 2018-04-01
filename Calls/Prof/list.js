@@ -1,6 +1,7 @@
 const bot = require('../../Server/config.js');
 var request = require("request");
 var striptags = require('striptags');
+var fs = require('fs');
 
 module.exports = {
   list: function(msg){
@@ -9,6 +10,30 @@ module.exports = {
     request({
       uri: "http://informatica.uniroma2.it/f0?fid=30&srv=4&cdl=0"
     }, function(error, response, body) {
+
+      // File module
+
+      if(error){
+        console.log("File reading");
+        body = fs.readFile('./Calls/Prof/oldProf.txt',function(err,data){
+          if(err){
+            return console.log("File read "+err);
+          }
+          else {
+            console.log("File read end");
+            return data;
+          }
+        })
+      }
+      console.log("File writing");
+      fs.writeFile('./Calls/Prof/oldProf.txt',body, function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+      });
+      console.log("File write end");
+
+      // File module end
+
       body = body.replace(/&nbsp;/gi, " ")
       body = body.replace('null', ' ')
       body = body.split("<td><a href=\"#\" onMouseOver=f2('null') onMouseOut=f1()>")

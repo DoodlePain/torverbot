@@ -3,7 +3,7 @@ const bot = require('../Server/config.js');
 module.exports = {
   start: function(msg){
     //Something
-    console.log("Hello world");
+    console.log("Start module");
     let replyMarkup = bot.bot.keyboard([
       [
         '📩 News', '📚 Docenti'
