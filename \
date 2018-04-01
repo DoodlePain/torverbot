@@ -1,0 +1,20 @@
+fs add
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Committer: Manuel <manuel@Manuels-iMac.lan>
+#
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   Calls/Exams/Session/eSummer.js
+#	new file:   Calls/Exams/Session/oldESummer.txt
+#	modified:   Calls/News/news.js
+#	new file:   Calls/News/oldNews.txt
+#	modified:   Calls/Prof/list.js
+#	new file:   Calls/Prof/oldProf.txt
+#	modified:   Calls/menu.js
+#	modified:   Calls/start.js
+#	new file:   Server/config.js
+#
