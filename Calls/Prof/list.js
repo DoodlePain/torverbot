@@ -4,7 +4,7 @@ var striptags = require('striptags');
 var fs = require('fs');
 
 module.exports = {
-  list: function(msg){
+  list: function(msg) {
     //Something
     console.log("Prof module require");
     request({
@@ -13,20 +13,19 @@ module.exports = {
 
       // File module
 
-      if(error){
+      if (error) {
         console.log("File reading");
-        body = fs.readFile('./Calls/Prof/oldProf.txt',function(err,data){
-          if(err){
-            return console.log("File read "+err);
-          }
-          else {
+        body = fs.readFile('./Calls/Prof/oldProf.txt', function(err, data) {
+          if (err) {
+            return console.log("File read " + err);
+          } else {
             console.log("File read end");
             return data;
           }
         })
       }
       console.log("File writing");
-      fs.writeFile('./Calls/Prof/oldProf.txt',body, function (err) {
+      fs.writeFile('./Calls/Prof/oldProf.txt', body, function(err) {
         if (err) throw err;
         console.log('Saved!');
       });
@@ -38,37 +37,41 @@ module.exports = {
       body = body.replace('null', ' ')
       body = body.split("<td><a href=\"#\" onMouseOver=f2('null') onMouseOut=f1()>")
       i = 1;
-      docs(body,i,msg)
+      docs(body, i, msg)
     })
   }
 }
 
 
-docs = (body, i,msg) => {
-  if(body[i]!=undefined){
+docs = (body, i, msg) => {
+  if (body[i] != undefined) {
     var name = striptags(body[i].split("<td>")[0]);
     var ruolo = striptags(body[i].split("<td>")[1]);
     var ufficio = striptags(body[i].split("<td>")[2])
     var telefono = striptags(body[i].split("<td>")[3])
-    if(telefono[0]!="+" && telefono[0]!="n" && telefono[0]!=" "){
-      telefono = "+39"+telefono
+    if (telefono[0] != "+" && telefono[0] != "n" && telefono[0] != " ") {
+      telefono = "+39" + telefono
     }
     var mail = body[i].split("<td>")[3]
     var mail = mail.split("@")
     mail1 = mail[0].split(":")[2]
-    if(mail[1]!=undefined)
-    {mail2 = mail[1].split("  '")[0]
-    mail = mail1+""+mail2}
-    else {
+    if (mail[1] != undefined) {
+      mail2 = mail[1].split("  '")[0]
+      mail = mail1 + "" + mail2
+    } else {
       mail = "Non definita"
     }
-    telefono = telefono.replace("-","")
-    telefono = telefono.replace("-","")
-    telefono = telefono.replace(".","")
-    telefono = telefono.replace(" ","")
-    telefono = telefono.replace(" ","")
+    telefono = telefono.replace("-", "")
+    telefono = telefono.replace("-", "")
+    telefono = telefono.replace(".", "")
+    telefono = telefono.replace(" ", "")
+    telefono = telefono.replace(" ", "")
     var materia = striptags(body[i].split("<td>")[4])
     let parseMode = 'html';
-    bot.bot.sendMessage(msg.from.id, "<b>" +name + "</b> \nRuolo : "+ ruolo +"\nStudio : "+ufficio+"\nTelefono : " +telefono +"\nMateria : "+materia+"\nEmail : "+mail, {parseMode}).then(()=> {return docs(body, i+1,msg)})
+    bot.bot.sendMessage(msg.from.id, "<b>" + name + "</b> \nRuolo : " + ruolo + "\nStudio : " + ufficio + "\nTelefono : " + telefono + "\nMateria : " + materia + "\nEmail : " + mail, {
+      parseMode
+    }).then(() => {
+      return docs(body, i + 1, msg)
+    })
   }
 }

@@ -1,7 +1,8 @@
 var request = require("request");
 var striptags = require('striptags');
 const TeleBot = require('telebot');
-const bot = new TeleBot('371457888:AAFPcUPqD8ki1vPOEem8P75L1pZdpBbuaCc');
+const accessToken = require('./Server/accessToken')
+const bot = new TeleBot(accessToken.aT);
 const Start = require('./Calls/start.js');
 const News = require('./Calls/News/news.js');
 const Menu = require('./Calls/menu.js');
@@ -18,49 +19,60 @@ const Chooser = require('./Calls/Exams/chooser.js');
 var fs = require('fs');
 
 
-setInterval(function () {
-   console.log('Checking news from http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0');
-   request({
-     uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
-   }, function(error, response, body) {
+// TO DO :
+// ✅  Exams module
+// ❌  2nd Session of each
+// ❌  About me
+// ❌  Support
+// ❌  Custom logo
+// ❌  Full charset Support
+// ❌  Free classroom
+// ❌  Perfomance update
 
-     // File module
 
-     if(error){
-       console.log("Site offline");
+setInterval(function() {
+  console.log('Checking news from http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0');
+  request({
+    uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
+  }, function(error, response, body) {
+
+    // File module
+
+    if (error) {
+      console.log("Site offline");
     }
-   var resp = fs.readFileSync('./Calls/News/oldNews.txt','utf8')
-     var msg = {
-          "message_id": 6306,
-          "from": {
-              "id": 168919643,
-              "is_bot": false,
-              "first_name": "TunaFish",
-              "username": "DoodlePain",
-              "language_code": "it-IT"
-          },
-          "chat": {
-              "id": 168919643,
-              "first_name": "TunaFish",
-              "username": "DoodlePain",
-              "type": "private"
-          },
-          "date": 1522846281,
-          "text": "📩 News",
-          "reply": {}
-      }
-      if(resp!==body){
-     console.log("Something new on the site");
-     News.news(msg)
-   } else {
-     console.log("Nothing new");
-     // let parseMode = 'html';
-     // bot.sendMessage(msg.from.id, "<b> Non ci sono novita\' sul sito </b> ", {parseMode})
+    var resp = fs.readFileSync('./Calls/News/oldNews.txt', 'utf8')
+    var msg = {
+      "message_id": 6306,
+      "from": {
+        "id": 168919643,
+        "is_bot": false,
+        "first_name": "TunaFish",
+        "username": "DoodlePain",
+        "language_code": "it-IT"
+      },
+      "chat": {
+        "id": 168919643,
+        "first_name": "TunaFish",
+        "username": "DoodlePain",
+        "type": "private"
+      },
+      "date": 1522846281,
+      "text": "📩 News",
+      "reply": {}
+    }
+    if (resp !== body) {
+      console.log("Something new on the site");
+      News.news(msg)
+    } else {
+      console.log("Nothing new");
+      // let parseMode = 'html';
+      // bot.sendMessage(msg.from.id, "<b> Non ci sono novita\' sul sito </b> ", {parseMode})
     }
   })
-},  60 * 60 * 1000);
+}, 60 * 60 * 1000);
 
-bot.start(()=>{
+bot.start(() => {
   // setInterval()
 });
 
@@ -70,7 +82,7 @@ bot.on('/start', msg => {
 });
 
 // Menu
-bot.on(/\bMenu/, msg =>{
+bot.on(/\bMenu/, msg => {
   return Menu.menu(msg);
 });
 
