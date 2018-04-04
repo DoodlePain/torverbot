@@ -18,22 +18,17 @@ module.exports = {
       // File module
 
       if (error) {
-        console.log("File reading");
         body = fs.readFile('./Calls/Exams/Session/oldESummer.txt', function(err, data) {
           if (err) {
             return console.log("File read " + err);
           } else {
-            console.log("File read end");
             return data;
           }
         })
       } else {
-        console.log("File writing");
         fs.writeFile('./Calls/Exams/Session/autumn.txt', body, function(err) {
           if (err) throw err;
-          console.log('Saved!');
         });
-        console.log("File write end");
       }
       // File module end
 
@@ -47,19 +42,16 @@ module.exports = {
       appello = body[1].split("</h1>")[0]
       pApp = pApp[1].split("<tr>")
       rec = (pApp, i) => {
-        console.log(i);
         if (i >= 3) {
           return null;
         } else {
           let parseMode = 'html';
           let response = "<b>                         " + (i + 1) + " Anno</b> "
           var primo = pApp[i + 3].split("<td")
-          console.log("ELSE");
           bot.bot.sendMessage(msg.from.id, response, {
             parseMode
           }).then(() => {
             for (var j = 0; primo[2 + j * 8] !== undefined; j++) {
-              console.log(primo[2 + j * 8]);
               insegnamento = striptags(primo[2 + j * 8])
               insegnamento = insegnamento.split(">")[1]
               docente = striptags(primo[3 + j * 8])

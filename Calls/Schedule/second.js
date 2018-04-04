@@ -5,7 +5,7 @@ var striptags = require('striptags');
 module.exports = {
   list: function(msg) {
     //Something
-    console.log("Hello world");
+    console.log("Second year module");
     request({
       uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
     }, function(error, response, body) {

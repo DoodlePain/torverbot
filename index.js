@@ -31,7 +31,6 @@ var fs = require('fs');
 
 
 setInterval(function() {
-  console.log('Checking news from http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0');
   request({
     uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
   }, function(error, response, body) {

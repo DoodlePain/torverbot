@@ -14,7 +14,6 @@ module.exports = {
       // File module
 
       if (error) {
-        console.log("File reading");
         body = fs.readFile('./Calls/Prof/oldProf.txt', function(err, data) {
           if (err) {
             return console.log("File read " + err);
@@ -24,12 +23,9 @@ module.exports = {
           }
         })
       }
-      console.log("File writing");
       fs.writeFile('./Calls/Prof/oldProf.txt', body, function(err) {
         if (err) throw err;
-        console.log('Saved!');
       });
-      console.log("File write end");
 
       // File module end
 

@@ -12,28 +12,21 @@ module.exports = {
     }, function(error, response, body) {
 
       str = JSON.stringify(msg, null, 4);
-      console.log("MESSAGE : " + str);
 
       // File module
 
       if (error) {
-        console.log("File reading");
         body = fs.readFile('./Calls/News/oldNews.txt', function(err, data) {
           if (err) {
             return console.log("File read " + err);
           } else {
-            console.log("File read end");
             return data;
           }
         })
       }
-      console.log("File writing");
       fs.writeFile('./Calls/News/oldNews.txt', body, function(err) {
         if (err) throw err;
-        console.log('Saved!');
       });
-      console.log("File write end");
-
       // File module end
 
       var new1 = body.split("<table>")

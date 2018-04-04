@@ -22,22 +22,17 @@ module.exports = {
       // File module
 
       if (error) {
-        console.log("File reading");
         body = fs.readFile('./Calls/Exams/Session/oldESummer.txt', function(err, data) {
           if (err) {
             return console.log("File read " + err);
           } else {
-            console.log("File read end");
             return data;
           }
         })
       } else {
-        console.log("File writing");
         fs.writeFile('./Calls/Exams/Session/oldESummer.txt', body, function(err) {
           if (err) throw err;
-          console.log('Saved!');
         });
-        console.log("File write end");
       }
       // File module end
 
