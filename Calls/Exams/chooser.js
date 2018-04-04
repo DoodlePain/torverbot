@@ -5,12 +5,11 @@ module.exports = {
     //Something
     console.log("Exams chooser module required");
     let replyMarkup = bot.bot.keyboard([
-      [
-        '☀️ Estiva', '🌷 Anticipata'
-      ],
-      ['⛄️ Invernale','🍂 Autunnale']
+      ['🍂 Autunnale','⛄️ Invernale'],
+      ['🌷 Anticipata', '☀️ Estiva' ],
+      ['⏪ Menu']
     ], {resize: true});
-    return bot.bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {replyMarkup});
+    return bot.bot.sendMessage(msg.from.id, 'Scegli il periodo della sessione', {replyMarkup});
 
   }
 }
