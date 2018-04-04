@@ -15,8 +15,54 @@ const eSummer = require('./Calls/Exams/Session/eSummer.js');
 const Winter = require('./Calls/Exams/Session/winter.js');
 const Autumn = require('./Calls/Exams/Session/autumn.js');
 const Chooser = require('./Calls/Exams/chooser.js');
+var fs = require('fs');
 
-bot.start();
+
+setInterval(function () {
+   console.log('Checking news from http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0');
+   request({
+     uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
+   }, function(error, response, body) {
+
+     // File module
+
+     if(error){
+       console.log("Site offline");
+    }
+   var resp = fs.readFileSync('./Calls/News/oldNews.txt','utf8')
+     var msg = {
+          "message_id": 6306,
+          "from": {
+              "id": 168919643,
+              "is_bot": false,
+              "first_name": "TunaFish",
+              "username": "DoodlePain",
+              "language_code": "it-IT"
+          },
+          "chat": {
+              "id": 168919643,
+              "first_name": "TunaFish",
+              "username": "DoodlePain",
+              "type": "private"
+          },
+          "date": 1522846281,
+          "text": "📩 News",
+          "reply": {}
+      }
+      if(resp!==body){
+     console.log("Something new on the site");
+     News.news(msg)
+   } else {
+     console.log("Nothing new");
+     // let parseMode = 'html';
+     // bot.sendMessage(msg.from.id, "<b> Non ci sono novita\' sul sito </b> ", {parseMode})
+    }
+  })
+},  60 * 60 * 1000);
+
+bot.start(()=>{
+  // setInterval()
+});
 
 // Start command
 bot.on('/start', msg => {

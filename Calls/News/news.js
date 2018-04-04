@@ -11,6 +11,9 @@ module.exports = {
       uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
     }, function(error, response, body) {
 
+str = JSON.stringify(msg, null, 4);
+      console.log("MESSAGE : " +str);
+
       // File module
 
       if(error){
