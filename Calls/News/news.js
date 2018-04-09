@@ -1,4 +1,5 @@
 const bot = require('../../Server/config.js');
+const fixedText = require('../../Server/textCheck.js');
 var request = require("request");
 var striptags = require('striptags');
 var fs = require('fs');
@@ -10,8 +11,6 @@ module.exports = {
     request({
       uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
     }, function(error, response, body) {
-
-      str = JSON.stringify(msg, null, 4);
 
       // File module
 
@@ -29,48 +28,36 @@ module.exports = {
       });
       // File module end
 
-      var new1 = body.split("<table>")
-      var i = 1
-      while (new1[i] != undefined) {
-        var app = new1[i].split("<img src=/images/new.gif>&nbsp;")
-        var title = app[1].split("<br>")
-        app = new1[i].split("<tr><td><p>")
-        var body = app[1].split("</p><span>")
-        title = striptags(title[0])
-        var uri = undefined
-        if (body[0].split("https")[1] != undefined && i < 4) {
-          var uri = body[0].split("https")[1]
-          uri = uri.split('">')
-          uri = uri[0]
-          uri = uri.replace('\"', "")
-          uri = "https" + uri
-        } else if (body[0].split("http")[1] != undefined && i < 4) {
-          var uri = body[0].split("http")[1]
-          uri = uri.split('">')
-          uri = uri[0]
-          uri = uri.replace('\"', "")
-          uri = "http" + uri
-        }
-        body = striptags(body[0]);
-        body = body.replace(/&nbsp;/gi, " ")
-        body = body.replace(/&ugrave;/gi, "ù")
-        body = body.replace(/&bull;/gi, "•")
-        if (uri != undefined) {
-          let replyMarkup = bot.bot.inlineKeyboard([
-            [bot.bot.inlineButton('url', {
-              url: uri
-            })]
-          ]);
-          uri = uri.split(" target")
-          uri = uri[0]
-          bot.bot.sendMessage(msg.from.id, title + "\n" + body, {
-            replyMarkup
-          }).then((response) => {}).catch((error) => {});
-        } else {
-          bot.bot.sendMessage(msg.from.id, title + "\n" + body).then((response) => {}).catch((error) => {});
-        }
-        i++
-      }
+      body = body.split("<body>")[1]
+      body = body.split("</body>")[0]
+      body = body.replace(/\u00a0/g, " ");
+      var news = body.split("<table>")
+      console.log();
+      i = news.length - 1
+      list(news, i, msg)
     });
+  }
+}
+
+list = (news, i, msg) => {
+  if (i != 0) {
+    var title = news[i].split("<img src=/images/new.gif>&nbsp;")[1]
+    var date = title.split("</span>")[0]
+    var text = title.split("</td></tr>")[0]
+    var response = ""
+    let parseMode = 'html';
+    title = title.split("<br>")[0]
+    date = date.split("\">")[1]
+    date = date.split(" inviato")[0]
+    text = text.split("<tr><td>")[1]
+    response = "<b>" + striptags(title) + "  \n" + striptags(date) + "</b>\n" + striptags(text)
+    response = fixedText.fix(response)
+    console.log(striptags(title) + "\n\n\n\n\n");
+    bot.bot.sendMessage(msg.from.id, response, {
+        parseMode
+      })
+      .then(() => {
+        return list(news, i - 1, msg)
+      })
   }
 }
