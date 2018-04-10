@@ -32,7 +32,6 @@ module.exports = {
       body = body.split("</body>")[0]
       body = body.replace(/\u00a0/g, " ");
       var news = body.split("<table>")
-      console.log();
       i = news.length - 1
       list(news, i, msg)
     });
@@ -52,7 +51,6 @@ list = (news, i, msg) => {
     text = text.split("<tr><td>")[1]
     response = "<b>" + striptags(title) + "  \n" + striptags(date) + "</b>\n" + striptags(text)
     response = fixedText.fix(response)
-    console.log(striptags(title) + "\n\n\n\n\n");
     bot.bot.sendMessage(msg.from.id, response, {
         parseMode
       })

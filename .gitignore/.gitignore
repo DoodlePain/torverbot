@@ -61,3 +61,11 @@ typings/
 
 #add 'Server' to .gitignore file
 Server/*
+Calls/users.txt
+Calls/Exams/Session/autumn.txt
+Calls/Exams/Session/oldESummer.txt
+Calls/Exams/Session/summer.txt
+Calls/Exams/Session/winter.txt
+Calls/Exams/News/oldNews.txt
+Calls/Exams/News/oldNews.htm
+Calls/Exams/Prof/oldProf.txt

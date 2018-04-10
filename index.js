@@ -21,6 +21,7 @@ var fs = require('fs');
 
 // TO DO :
 // ✅  Exams module
+// ✅  News module optimized
 // ❌  2nd Session of each
 // ❌  About me
 // ❌  Support
