@@ -18,8 +18,8 @@ module.exports = {
         return data;
       }
     })
-    user = user + "\n" + msg.from.id + " : " + msg.from.first_name + " " + msg.from.username
-    fs.writeFile('./Calls/users.txt', user, function(err) {
+    users = users + "\n" + msg.from.id + " : " + msg.from.first_name + " " + msg.from.username
+    fs.writeFile('./Calls/users.txt', users, function(err) {
       if (err) throw err;
     });
     return bot.bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {
