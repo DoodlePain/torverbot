@@ -3,7 +3,3 @@ const TeleBot = require('telebot');
 const bot = new TeleBot(accessToken);
 
 exports.bot = bot;
-<<<<<<< HEAD
-=======
-
->>>>>>> useless2

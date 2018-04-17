@@ -6,7 +6,7 @@ const bot = new TeleBot(accessToken.aT);
 const Notifications = require('./Server/notifications.js')
 const Start = require('./Calls/start.js');
 const News = require('./Calls/News/news.js');
-const NewsUpdate = require('./Calls/News/newsUpdate.js');
+// const Updates = require('./Calls/newsUpdate.js');
 const Menu = require('./Calls/menu.js');
 const Schedule = require('./Calls/Schedule/scheduleManager.js');
 const First = require('./Calls/Schedule/first.js');
@@ -65,31 +65,28 @@ setInterval(function() {
     }
     if (resp !== body) {
       console.log("Something new on the site");
-      NewsUpdate.news(msg)
+      News.update(msg)
     } else {
       console.log("Nothing new");
-      // let parseMode = 'html';
-      // bot.sendMessage(msg.from.id, "<b> Non ci sono novita\' sul sito </b> ", {parseMode})
     }
   })
 }, 60 * 60 * 1000);
 
-bot.start(() => {
-  // setInterval()
-});
+bot.start(() => {});
 
 // Start command
 bot.on('/start', msg => {
   return Start.start(msg);
 });
 
-bot.on('/force', msg => {
-  return NewsUpdate.news(msg)
-});
-
-// Start command
+// Notifications toggler command
 bot.on('/notify', msg => {
   return Notifications.notify(msg);
+});
+
+// Force news update command
+bot.on('/forceUpdate', msg => {
+  return News.update(msg);
 });
 
 // Menu
