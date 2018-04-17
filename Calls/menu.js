@@ -9,7 +9,7 @@ module.exports = {
     ], {
       resize: true
     });
-    return bot.bot.sendMessage(msg.from.id, 'Qui trovi tutto quello che cerchi.', {
+    return bot.bot.sendMessage(msg.from.id, 'PER ATTIVARE LE NOTIFICHE SCRIVI AL BOT: \n\n /notify \n \n \n \n Qui trovi tutto quello che cerchi.', {
       replyMarkup
     });
   }

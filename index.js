@@ -3,8 +3,10 @@ var striptags = require('striptags');
 const TeleBot = require('telebot');
 const accessToken = require('./Server/accessToken')
 const bot = new TeleBot(accessToken.aT);
+const Notifications = require('./Server/notifications.js')
 const Start = require('./Calls/start.js');
 const News = require('./Calls/News/news.js');
+const NewsUpdate = require('./Calls/News/newsUpdate.js');
 const Menu = require('./Calls/menu.js');
 const Schedule = require('./Calls/Schedule/scheduleManager.js');
 const First = require('./Calls/Schedule/first.js');
@@ -63,7 +65,7 @@ setInterval(function() {
     }
     if (resp !== body) {
       console.log("Something new on the site");
-      News.news(msg)
+      NewsUpdate.news(msg)
     } else {
       console.log("Nothing new");
       // let parseMode = 'html';
@@ -79,6 +81,15 @@ bot.start(() => {
 // Start command
 bot.on('/start', msg => {
   return Start.start(msg);
+});
+
+bot.on('/force', msg => {
+  return NewsUpdate.news(msg)
+});
+
+// Start command
+bot.on('/notify', msg => {
+  return Notifications.notify(msg);
 });
 
 // Menu
