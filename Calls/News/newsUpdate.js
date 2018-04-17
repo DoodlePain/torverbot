@@ -45,7 +45,7 @@ module.exports = {
 }
 
 list = (news, i, user) => {
-  if (i != 0) {
+  if (i-1 == 0) {
     var title = news[i].split("<img src=/images/new.gif>&nbsp;")[1]
     var date = title.split("</span>")[0]
     var text = title.split("</td></tr>")[0]
@@ -63,5 +63,8 @@ list = (news, i, user) => {
       .then(() => {
         return list(news, i - 1, user)
       })
+  }
+  else if(i!=0){
+    return list(news, i - 1, user)
   }
 }
