@@ -3,20 +3,6 @@ const bot = require('../../Server/config.js');
 module.exports = {
   list: function(msg) {
     console.log("About module");
-    // let replyMarkup = bot.bot.keyboard([
-    //   ['💎 About', '❗️ Notifiche'],
-    //   ['⏪ Menu']
-    // ], {
-    //   resize: true
-    // });
-    // let replyMarkup = bot.bot.keyboard([
-    //   [bot.bot.button('contact', 'Your contact'), bot.bot.inlineKeyboard([
-    //     ["Ciao"]
-    //   ])],
-    //   ['⏪ Menu']
-    // ], {
-    //   resize: true
-    // });
 
     let replyMarkup = bot.bot.inlineKeyboard([
       [
@@ -37,12 +23,7 @@ module.exports = {
       ]
     ]);
 
-
-    //
-    //  bot.sendMessage(msg.from.id, 'Button example.', {
-    //   replyMarkup
-    // });
-    return bot.bot.sendMessage(msg.from.id, 'Ciao, \nquesto bot e\' stato creato \ncon cura e ❤️  da Manuel Scarapazzi \nper rendere piu\' semplice l\'accesso al sito di informatica. \nL\'utilizzo e\' completamente gratuito.', {
+    return bot.bot.sendMessage(msg.from.id, 'Ciao, \nquesto bot e\' stato creato \ncon cura e ❤️  da Manuel Scarapazzi \nper rendere piu\' semplice l\'accesso al sito di informatica.', {
       replyMarkup
     });
   }
