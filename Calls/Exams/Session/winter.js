@@ -17,7 +17,7 @@ module.exports = {
 
       // File module
 
-      if (error) {
+      if (response.statusCode != '200') {
         body = fs.readFile('./Calls/Exams/Session/oldESummer.txt', function(err, data) {
           if (err) {
             return console.log("File read " + err);

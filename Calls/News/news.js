@@ -13,14 +13,16 @@ module.exports = {
     }, function(error, response, body) {
 
       // File module
-
-      if (error) {
+      if (response.statusCode != '200') {
         body = fs.readFileSync('./Calls/News/oldNews.txt', 'utf8')
+      } else {
+        fs.writeFile('./Calls/News/oldNews.txt', body, function(err) {
+          if (err) throw err;
+        });
       }
-      fs.writeFile('./Calls/News/oldNews.txt', body, function(err) {
-        if (err) throw err;
-      });
       // File module end
+
+      console.log(body);
 
       body = body.split("<body>")[1]
       body = body.split("</body>")[0]

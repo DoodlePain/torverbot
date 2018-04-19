@@ -6,8 +6,9 @@ const bot = new TeleBot(accessToken.aT);
 const Notifications = require('./Server/notifications.js')
 const Start = require('./Calls/start.js');
 const News = require('./Calls/News/news.js');
-// const Updates = require('./Calls/newsUpdate.js');
 const Menu = require('./Calls/menu.js');
+const Altro = require('./Calls/Other/otherMenu.js');
+const About = require('./Calls/Other/about.js');
 const Schedule = require('./Calls/Schedule/scheduleManager.js');
 const First = require('./Calls/Schedule/first.js');
 const Second = require('./Calls/Schedule/second.js');
@@ -24,9 +25,11 @@ var fs = require('fs');
 // TO DO :
 // ✅  Exams module
 // ✅  News module optimized
+// ✅  About me
+// ✅  Support
+// ✅  Notification system
+// ❌  Add response.statusCode error verification @ Schedule (Offline mode)
 // ❌  2nd Session of each
-// ❌  About me
-// ❌  Support
 // ❌  Custom logo
 // ❌  Full charset Support
 // ❌  Free classroom
@@ -79,11 +82,6 @@ bot.on('/start', msg => {
   return Start.start(msg);
 });
 
-// Notifications toggler command
-bot.on('/notify', msg => {
-  return Notifications.notify(msg);
-});
-
 // Force news update command
 bot.on('/forceUpdate', msg => {
   return News.update(msg);
@@ -92,6 +90,21 @@ bot.on('/forceUpdate', msg => {
 // Menu
 bot.on(/\bMenu/, msg => {
   return Menu.menu(msg);
+});
+
+// Altro
+bot.on(/\bAltro/, msg => {
+  return Altro.menu(msg);
+});
+
+// About
+bot.on(/\bAbout/, msg => {
+  return About.list(msg);
+});
+
+// Attiva notifiche
+bot.on(/\bNotifiche/, msg => {
+  return Notifications.notify(msg);
 });
 
 // Lista degli orari

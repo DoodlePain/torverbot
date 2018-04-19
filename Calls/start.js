@@ -7,7 +7,8 @@ module.exports = {
     console.log("Start module");
     let replyMarkup = bot.bot.keyboard([
       ['📩 News', '📚 Docenti'],
-      ['🕓 Orario', '🎯 Esami']
+      ['🕓 Orario', '🎯 Esami'],
+      ['🚩 Altro']
     ], {
       resize: true
     });
