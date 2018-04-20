@@ -10,7 +10,7 @@ module.exports = {
     ], {
       resize: true
     });
-    return bot.bot.sendMessage(msg.from.id, 'PER ATTIVARE LE NOTIFICHE VAI SU: \n   🚩 ALTRO > ❗️ NOTIFICHE \n \n \n \n Qui trovi tutto quello che cerchi.', {
+    return bot.bot.sendMessage(msg.from.id, 'PER ATTIVARE LE NOTIFICHE VAI SU: \n   🚩 ALTRO  > ❗️ NOTIFICHE \n \n \n \n Qui trovi tutto quello che cerchi.', {
       replyMarkup
     });
   }
