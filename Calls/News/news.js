@@ -7,7 +7,7 @@ var fs = require('fs');
 module.exports = {
   news: function(msg) {
     //Something
-    console.log("News module request");
+    console.log(Date() + "News module request");
     request({
       uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
     }, function(error, response, body) {
@@ -21,9 +21,6 @@ module.exports = {
         });
       }
       // File module end
-
-      console.log(body);
-
       body = body.split("<body>")[1]
       body = body.split("</body>")[0]
       body = body.replace(/\u00a0/g, " ");
@@ -34,7 +31,7 @@ module.exports = {
   },
   update: function(msg) {
     //Something
-    console.log("News module request");
+    console.log(Date() + "News module request");
     request({
       uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
     }, function(error, response, body) {
@@ -108,7 +105,7 @@ list = (news, i, msg) => {
       .then(() => {
         return list(news, i - 1, msg)
       }).catch((error) => {
-        console.log('Error:', error);
+        console.log(Date() + 'Error:', error);
       });
   }
 }

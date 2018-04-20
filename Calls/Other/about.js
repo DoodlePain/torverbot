@@ -2,7 +2,7 @@ const bot = require('../../Server/config.js');
 
 module.exports = {
   list: function(msg) {
-    console.log("About module");
+    console.log(Date() + "About module");
 
     let replyMarkup = bot.bot.inlineKeyboard([
       [

@@ -4,7 +4,7 @@ var fs = require('fs');
 module.exports = {
   start: function(msg) {
     //Something
-    console.log("Start module");
+    console.log(Date() + "Start module");
     let replyMarkup = bot.bot.keyboard([
       ['📩 News', '📚 Docenti'],
       ['🕓 Orario', '🎯 Esami'],
@@ -14,7 +14,7 @@ module.exports = {
     });
     var users = fs.readFile('./Calls/users.txt', function(err, data) {
       if (err) {
-        return console.log("File read " + err);
+        return console.log(Date() + "File read " + err);
       } else {
         return data;
       }

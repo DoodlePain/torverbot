@@ -5,11 +5,11 @@ const fs = require('fs');
 
 module.exports = {
   list: function(msg, a) {
-    console.log(a);
+    console.log(Date() + a);
   },
   list: function(msg) {
     //Something
-    console.log("Early Summer session module require");
+    console.log(Date() + "Early Summer session module require");
     request({
       uri: "http://informatica.uniroma2.it/pages/trien/esami/dateEsami1.htm",
       encoding: "utf-8"
@@ -24,7 +24,7 @@ module.exports = {
       if (response.statusCode != '200') {
         body = fs.readFile('./Calls/Exams/Session/oldESummer.txt', function(err, data) {
           if (err) {
-            return console.log("File read " + err);
+            return console.log(Date() + "File read " + err);
           } else {
             return data;
           }

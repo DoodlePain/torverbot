@@ -6,7 +6,7 @@ var fs = require('fs');
 module.exports = {
   list: function(msg) {
     //Something
-    console.log("Prof module require");
+    console.log(Date() + "Prof module require");
     request({
       uri: "http://informatica.uniroma2.it/f0?fid=30&srv=4&cdl=0"
     }, function(error, response, body) {
@@ -16,9 +16,9 @@ module.exports = {
       if (response.statusCode != '200') {
         body = fs.readFile('./Calls/Prof/oldProf.txt', function(err, data) {
           if (err) {
-            return console.log("File read " + err);
+            return console.log(Date() + "File read " + err);
           } else {
-            console.log("File read end");
+            console.log(Date() + "File read end");
             return data;
           }
         })

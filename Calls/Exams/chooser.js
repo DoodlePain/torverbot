@@ -3,7 +3,7 @@ const bot = require('../../Server/config.js');
 module.exports = {
   chooser: function(msg) {
     //Something
-    console.log("Exams chooser module required");
+    console.log(Date() + "Exams chooser module required");
     let replyMarkup = bot.bot.keyboard([
       ['🍂 Autunnale', '⛄️ Invernale'],
       ['🌷 Anticipata', '☀️ Estiva'],

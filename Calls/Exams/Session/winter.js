@@ -6,7 +6,7 @@ const fs = require('fs');
 module.exports = {
   list: function(msg) {
     //Something
-    console.log("Winter session module require");
+    console.log(Date() + "Winter session module require");
     request({
       uri: "http://informatica.uniroma2.it/pages/trien/esami/dateEsami0.htm"
     }, function(error, response, body) {
@@ -20,7 +20,7 @@ module.exports = {
       if (response.statusCode != '200') {
         body = fs.readFile('./Calls/Exams/Session/oldESummer.txt', function(err, data) {
           if (err) {
-            return console.log("File read " + err);
+            return console.log(Date() + "File read " + err);
           } else {
             return data;
           }
