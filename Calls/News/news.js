@@ -9,18 +9,21 @@ module.exports = {
     //Something
     console.log(Date() + "News module request");
     request({
+      // uri: "http://informaticffa.usdaniroma2.it/f0?fid="
       uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
     }, function(error, response, body) {
 
       // File module
-      if (response.statusCode != '200') {
-        body = fs.readFileSync('./Calls/News/oldNews.txt', 'utf8')
+      if (response == undefined || response.statusCode != '200') {
+        console.log("Huston, we've got some problems... \nThe site is offline!");
+        body = fs.readFileSync('./Server/LocalFiles/oldNews.txt', 'utf8')
       } else {
-        fs.writeFile('./Calls/News/oldNews.txt', body, function(err) {
+        fs.writeFile('./Server/LocalFiles/oldNews.txt', body, function(err) {
           if (err) throw err;
         });
       }
       // File module end
+
       body = body.split("<body>")[1]
       body = body.split("</body>")[0]
       body = body.replace(/\u00a0/g, " ");
@@ -29,7 +32,7 @@ module.exports = {
       list(news, i, msg)
     });
   },
-  update: function(msg) {
+  update: function(msg, oldV) {
     //Something
     console.log(Date() + "News module request");
     request({
@@ -39,24 +42,38 @@ module.exports = {
       // File module
 
       if (error) {
-        body = fs.readFileSync('./Calls/News/oldNews.txt', 'utf8')
-      }
-      fs.writeFile('./Calls/News/oldNews.txt', body, function(err) {
-        if (err) throw err;
-      });
-      // File module end
+        // body = fs.readFileSync('./Calls/News/oldNews.txt', 'utf8')
+        console.log("Huston, we've got some problems... \nThe site is offline!");
+      } else {
+        fs.writeFile('./Calls/News/oldNews.txt', body, function(err) {
+          if (err) throw err;
+        });
+        // File module end
 
-      body = body.split("<body>")[1]
-      body = body.split("</body>")[0]
-      body = body.replace(/\u00a0/g, " ");
-      var news = body.split("<table>")
-      i = news.length - 1
-      var users = fs.readFileSync('./Server/notifications.txt', 'utf8');
-      users = users.split(',')
-      var j = 0
-      while (users[j] != undefined) {
-        up(news, i, users[j])
-        j++
+
+        oldV = oldV.split("<body>")[1]
+        oldV = oldV.split("</body>")[0]
+        oldV = oldV.replace(/\u00a0/g, " ");
+        var newsCompare = oldV.split("<table>")
+        var oldVlen = oldV.length
+        console.log("Old news length: " + oldVlen);
+
+        body = body.split("<body>")[1]
+        body = body.split("</body>")[0]
+        body = body.replace(/\u00a0/g, " ");
+        var news = body.split("<table>")
+        var currentNewsLen = news.length
+        console.log("Current length : " + currentNewsLen);
+        if (oldVlen <= currentNewsLen) {
+          i = news.length - 1
+          var users = fs.readFileSync('./Server/notifications.txt', 'utf8');
+          users = users.split(',')
+          var j = 0
+          while (users[j] != undefined) {
+            up(news, i, users[j])
+            j++
+          }
+        }
       }
     });
   }

@@ -4,7 +4,7 @@ var fs = require('fs');
 module.exports = {
   notify: function(msg) {
     //Something
-    console.log(Date() + "Notifications module");
+    console.log(Date() + Date() + "Notifications module");
     let replyMarkup = bot.bot.keyboard([
       ['📩 News', '📚 Docenti'],
       ['🕓 Orario', '🎯 Esami'],
@@ -23,7 +23,7 @@ module.exports = {
       i++
     }
     if (found == false) {
-      console.log(Date() + "User not found");
+      console.log(Date() + Date() + "User not found");
       users = users + "," + msg.from.id
     }
     fs.writeFile('./Server/notifications.txt', users, function(err) {

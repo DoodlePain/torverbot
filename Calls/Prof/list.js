@@ -12,21 +12,14 @@ module.exports = {
     }, function(error, response, body) {
 
       // File module
-
-      if (response.statusCode != '200') {
-        body = fs.readFile('./Calls/Prof/oldProf.txt', function(err, data) {
-          if (err) {
-            return console.log(Date() + "File read " + err);
-          } else {
-            console.log(Date() + "File read end");
-            return data;
-          }
-        })
+      if (response == undefined || response.statusCode != '200') {
+        console.log("Huston, we've got some problems... \nThe site is offline!");
+        body = fs.readFileSync('./Server/LocalFiles/oldProf.txt', 'utf8')
+      } else {
+        fs.writeFile('./Server/LocalFiles/oldProf.txt', body, function(err) {
+          if (err) throw err;
+        });
       }
-      fs.writeFile('./Calls/Prof/oldProf.txt', body, function(err) {
-        if (err) throw err;
-      });
-
       // File module end
 
       body = body.replace(/&nbsp;/gi, " ")

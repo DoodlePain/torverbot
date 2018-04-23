@@ -4,6 +4,7 @@ const TeleBot = require('telebot');
 const accessToken = require('./Server/accessToken')
 const bot = new TeleBot(accessToken.aT);
 const Notifications = require('./Server/notifications.js')
+const Global = require('./Server/globalNotification.js')
 const Start = require('./Calls/start.js');
 const News = require('./Calls/News/news.js');
 const Menu = require('./Calls/menu.js');
@@ -28,12 +29,14 @@ var fs = require('fs');
 // ✅  About me
 // ✅  Support
 // ✅  Notification system
-// ❌  Add response.statusCode error verification @ Schedule (Offline mode)
+// ✅  Add response.statusCode error verification @ Schedule (Offline mode)
+// ✅  FULL Offline data system
+// ❌  News problem : If there are < 2 news it goes to the previous news page => USELESS UPDATE NEWS
 // ❌  2nd Session of each
 // ❌  Custom logo
 // ❌  Full charset Support
-// ❌  Free classroom
 // ❌  Perfomance update
+// ❌  Bonus Challenge : Free classroom
 
 
 setInterval(function() {
@@ -44,7 +47,7 @@ setInterval(function() {
     // File module
 
     if (error) {
-      console.log("Site offline");
+      console.log("Huston, we've got some problems... \nThe site is offline!");
     }
     var resp = fs.readFileSync('./Calls/News/oldNews.txt', 'utf8')
     var msg = {
@@ -68,12 +71,12 @@ setInterval(function() {
     }
     if (resp !== body) {
       console.log("Something new on the site");
-      News.update(msg)
+      News.update(msg, body)
     } else {
       console.log("Nothing new");
     }
   })
-}, 60 * 60 * 1000);
+}, 30 * 60 * 1000);
 
 bot.start(() => {});
 
@@ -85,6 +88,11 @@ bot.on('/start', msg => {
 // Force news update command
 bot.on('/forceUpdate', msg => {
   return News.update(msg);
+});
+
+// Global notification
+bot.on('/global', msg => {
+  return Global.global(msg);
 });
 
 // Menu

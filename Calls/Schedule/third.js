@@ -9,6 +9,19 @@ module.exports = {
     request({
       uri: "http://informatica.uniroma2.it/pages/trien/orario/orario.htm"
     }, function(error, response, body) {
+
+      // File module
+      if (response == undefined || response.statusCode != '200') {
+        console.log("Huston, we've got some problems... \nThe site is offline!");
+        body = fs.readFileSync('./Server/LocalFiles/schedule.txt', 'utf8')
+      } else {
+        fs.writeFile('./Server/LocalFiles/schedule.txt', body, function(err) {
+          if (err) throw err;
+        });
+      }
+      // File module end
+
+
       var orario = [];
       body = body.split("00</td>");
       var app = [];

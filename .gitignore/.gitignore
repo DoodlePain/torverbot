@@ -60,7 +60,7 @@ typings/
 #add 'node_modules' to .gitignore file
 
 #add 'Server' to .gitignore file
-Server/*
+#Server/*
 Calls/users.txt
 Calls/Exams/Session/autumn.txt
 Calls/Exams/Session/oldESummer.txt

@@ -12,7 +12,7 @@ module.exports = {
     ], {
       resize: true
     });
-    var users = fs.readFile('./Calls/users.txt', function(err, data) {
+    var users = fs.readFile('./Server/LocalFiles/users.txt', function(err, data) {
       if (err) {
         return console.log(Date() + "File read " + err);
       } else {
@@ -23,7 +23,7 @@ module.exports = {
     fs.writeFile('./Calls/users.txt', users, function(err) {
       if (err) throw err;
     });
-    return bot.bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica\n \nPER ATTIVARE LE NOTIFICHE VAI SU: \n   🚩 ALTRO > ❗️ NOTIFICHE', {
+    return bot.bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {
       replyMarkup
     });
 

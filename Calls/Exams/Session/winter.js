@@ -10,27 +10,22 @@ module.exports = {
     request({
       uri: "http://informatica.uniroma2.it/pages/trien/esami/dateEsami0.htm"
     }, function(error, response, body) {
-      body = body.replace(/&nbsp;/gi, " ")
-      body = body.replace('null', ' ')
-      body = body.replace('�', 'e\'')
-      body = body.replace('�', 'e\'')
 
       // File module
-
-      if (response.statusCode != '200') {
-        body = fs.readFile('./Calls/Exams/Session/oldESummer.txt', function(err, data) {
-          if (err) {
-            return console.log(Date() + "File read " + err);
-          } else {
-            return data;
-          }
-        })
+      if (response == undefined || response.statusCode != '200') {
+        console.log("Huston, we've got some problems... \nThe site is offline!");
+        body = fs.readFileSync('./Server/LocalFiles/winter.txt', 'utf8')
       } else {
-        fs.writeFile('./Calls/Exams/Session/winter.txt', body, function(err) {
+        fs.writeFile('./Server/LocalFiles/winter.txt', body, function(err) {
           if (err) throw err;
         });
       }
       // File module end
+
+      body = body.replace(/&nbsp;/gi, " ")
+      body = body.replace('null', ' ')
+      body = body.replace('�', 'e\'')
+      body = body.replace('�', 'e\'')
 
 
       var insegnamento, docente, sData, sOra, sAula, oData, oOra, oAula
