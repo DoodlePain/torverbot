@@ -1,6 +1,7 @@
 const bot = require('../../Server/config.js');
 var request = require("request");
 var striptags = require('striptags');
+var fs = require('fs');
 
 module.exports = {
   list: function(msg) {
