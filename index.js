@@ -39,10 +39,10 @@ var fs = require('fs');
 // ❌  Bonus Challenge : Free classroom
 
 
-setInterval(function() {
+setInterval(function () {
   request({
     uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
-  }, function(error, response, body) {
+  }, function (error, response, body) {
 
     // File module
 
@@ -78,7 +78,7 @@ setInterval(function() {
   })
 }, 30 * 60 * 1000);
 
-bot.start(() => {});
+bot.start(() => { });
 
 // Start command
 bot.on('/start', msg => {
