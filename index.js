@@ -76,7 +76,7 @@ setInterval(function () {
       console.log("Nothing new");
     }
   })
-}, 30 * 60 * 1000);
+}, 12 * 60 * 1000);
 
 bot.start(() => { });
 
