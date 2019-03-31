@@ -2,7 +2,7 @@ const bot = require('../Server/config.js');
 var fs = require('fs');
 
 module.exports = {
-  start: function(msg) {
+  start: function (msg) {
     //Something
     console.log(Date() + "Start module");
     let replyMarkup = bot.bot.keyboard([
@@ -10,9 +10,9 @@ module.exports = {
       ['🕓 Orario', '🎯 Esami'],
       ['🚩 Altro']
     ], {
-      resize: true
-    });
-    var users = fs.readFile('./Server/LocalFiles/users.txt', function(err, data) {
+        resize: true
+      });
+    var users = fs.readFile('./Server/LocalFiles/users.txt', function (err, data) {
       if (err) {
         return console.log(Date() + "File read " + err);
       } else {
@@ -20,12 +20,14 @@ module.exports = {
       }
     })
     users = users + "\n" + msg.from.id + " : " + msg.from.first_name + " " + msg.from.username
-    fs.writeFile('./Calls/users.txt', users, function(err) {
+    fs.writeFile('./Calls/users.txt', users, function (err) {
       if (err) throw err;
     });
-    return bot.bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica', {
-      replyMarkup
-    });
+    return bot.bot.sendMessage(msg.from.id, 'Benvenuto nel bot di Tor Vergata, il modo piu\' semplice per ricevere informazioni relative al corso di Informatica'
+      + '\n<b>Qualora non dovessi vedere il menu\' scrivi in chat : /start </b>' + '\nTi invitiamo ad attivare le notifiche automatiche nel menu\' 🚩 Altro', {
+        parseMode: 'html', replyMarkup
+      });
+
 
   }
 }

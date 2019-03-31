@@ -1,29 +1,19 @@
 const bot = require('../../Server/config.js');
 var request = require("request");
 var striptags = require('striptags');
-var fs = require('fs');
+var fileSaver = require('../FileSaver/FileSaver');
+const iconv = require('iconv-lite');
 
 module.exports = {
-  list: function(msg) {
+  list: function (msg) {
     //Something
     console.log(Date() + "Prof module require");
     request({
       uri: "http://informatica.uniroma2.it/f0?fid=30&srv=4&cdl=0"
-    }, function(error, response, body) {
+    }, function (error, response, body) {
+      var utf8String = iconv.decode(new Buffer(body), "ISO-8859-1");
+      body = fileSaver.checkAndWrite(response, utf8String, './Server/LocalFiles/oldProf.txt');
 
-      // File module
-      if (response == undefined || response.statusCode != '200') {
-        console.log("Huston, we've got some problems... \nThe site is offline!");
-        body = fs.readFileSync('./Server/LocalFiles/oldProf.txt', 'utf8')
-      } else {
-        fs.writeFile('./Server/LocalFiles/oldProf.txt', body, function(err) {
-          if (err) throw err;
-        });
-      }
-      // File module end
-
-      body = body.replace(/&nbsp;/gi, " ")
-      body = body.replace('null', ' ')
       body = body.split("<td><a href=\"#\" onMouseOver=f2('null') onMouseOut=f1()>")
       i = 1;
       docs(body, i, msg)

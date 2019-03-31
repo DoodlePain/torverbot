@@ -1,40 +1,28 @@
 const bot = require('../../../Server/config.js');
 var request = require("request");
 var striptags = require('striptags');
-const fs = require('fs');
+var fileSaver = require('../../FileSaver/FileSaver');
+const iconv = require('iconv-lite');
 
 module.exports = {
-  list: function(msg) {
+  list: function (msg) {
     //Something
     console.log(Date() + "Autumn session module require");
     request({
       uri: "http://informatica.uniroma2.it/pages/trien/esami/dateEsami5.htm"
-    }, function(error, response, body) {
+    }, function (error, response, body) {
 
-      // File module
-      if (response == undefined || response.statusCode != '200') {
-        console.log("Huston, we've got some problems... \nThe site is offline!");
-        body = fs.readFileSync('./Server/LocalFiles/autumn.txt', 'utf8')
-      } else {
-        fs.writeFile('./Server/LocalFiles/autumn.txt', body, function(err) {
-          if (err) throw err;
-        });
-      }
-      // File module end
+      var utf8String = iconv.decode(new Buffer(body), "ISO-8859-1");
 
-      body = body.replace(/&nbsp;/gi, " ")
-      body = body.replace('null', ' ')
-      body = body.replace('�', 'e\'')
-      body = body.replace('�', 'e\'')
+      //File module
+      utf8String = fileSaver.checkAndWrite(response, utf8String, './Server/LocalFiles/autumn.txt');
+
 
 
       var insegnamento, docente, sData, sOra, sAula, oData, oOra, oAula
-      var primo, secondo;
-      body = body.split('<h1>')
-      pApp = body[1]
-      var appello = body[1]
+      utf8String = utf8String.split('<h1>')
+      pApp = utf8String[1]
       pApp = pApp.split('</h1>')
-      appello = body[1].split("</h1>")[0]
       pApp = pApp[1].split("<tr>")
       rec = (pApp, i) => {
         if (i >= 3) {

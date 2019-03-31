@@ -2,27 +2,18 @@ const bot = require('../../Server/config.js');
 const fixedText = require('../../Server/textCheck.js');
 var request = require("request");
 var striptags = require('striptags');
-var fs = require('fs');
+var fileSaver = require('../FileSaver/FileSaver');
+const fs = require('fs');
 
 module.exports = {
-  news: function(msg) {
+  news: function (msg) {
     //Something
     console.log(Date() + "News module request");
     request({
-      // uri: "http://informaticffa.usdaniroma2.it/f0?fid="
       uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
-    }, function(error, response, body) {
+    }, function (error, response, body) {
 
-      // File module
-      if (response == undefined || response.statusCode != '200') {
-        console.log("Huston, we've got some problems... \nThe site is offline!");
-        body = fs.readFileSync('./Server/LocalFiles/oldNews.txt', 'utf8')
-      } else {
-        fs.writeFile('./Server/LocalFiles/oldNews.txt', body, function(err) {
-          if (err) throw err;
-        });
-      }
-      // File module end
+      body = fileSaver.checkAndWrite(response, body, './Server/LocalFiles/oldNews.txt');
 
       body = body.split("<body>")[1]
       body = body.split("</body>")[0]
@@ -32,20 +23,19 @@ module.exports = {
       list(news, i, msg)
     });
   },
-  update: function(msg, oldV) {
+  update: function (msg, oldV) {
     //Something
     console.log(Date() + "News module request");
     request({
       uri: "http://informatica.uniroma2.it/f0?fid=50&srv=4&pag=0"
-    }, function(error, response, body) {
+    }, function (error, response, body) {
 
       // File module
 
       if (error) {
-        // body = fs.readFileSync('./Calls/News/oldNews.txt', 'utf8')
         console.log("Huston, we've got some problems... \nThe site is offline!");
       } else {
-        fs.writeFile('./Calls/News/oldNews.txt', body, function(err) {
+        fs.writeFile('./Calls/News/oldNews.txt', body, function (err) {
           if (err) throw err;
         });
         // File module end
@@ -54,7 +44,6 @@ module.exports = {
         oldV = oldV.split("<body>")[1]
         oldV = oldV.split("</body>")[0]
         oldV = oldV.replace(/\u00a0/g, " ");
-        var newsCompare = oldV.split("<table>")
         var oldVlen = oldV.length
         console.log("Old news length: " + oldVlen);
 
@@ -82,6 +71,7 @@ module.exports = {
 up = (news, i, user) => {
   if (i - 1 == 0) {
     var title = news[i].split("<img src=/images/new.gif>&nbsp;")[1]
+
     var date = title.split("</span>")[0]
     var text = title.split("</td></tr>")[0]
     var response = ""
@@ -93,8 +83,8 @@ up = (news, i, user) => {
     response = "<b>" + striptags(title) + "  \n" + striptags(date) + "</b>\n" + striptags(text)
     response = fixedText.fix(response)
     bot.bot.sendMessage(user, response, {
-        parseMode
-      })
+      parseMode
+    })
       .then(() => {
         return up(news, i - 1, user)
       })
@@ -105,7 +95,7 @@ up = (news, i, user) => {
 
 list = (news, i, msg) => {
   if (i != 0) {
-    var title = news[i].split("<img src=/images/new.gif>&nbsp;")[1]
+    var title = news[i].split("<img src=/images/new.gif> ")[1]
     var date = title.split("</span>")[0]
     var text = title.split("</td></tr>")[0]
     var response = ""
@@ -117,8 +107,8 @@ list = (news, i, msg) => {
     response = "<b>" + striptags(title) + "  \n" + striptags(date) + "</b>\n" + striptags(text)
     response = fixedText.fix(response)
     bot.bot.sendMessage(msg.from.id, response, {
-        parseMode
-      })
+      parseMode
+    })
       .then(() => {
         return list(news, i - 1, msg)
       }).catch((error) => {

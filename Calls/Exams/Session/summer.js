@@ -1,31 +1,21 @@
 const bot = require('../../../Server/config.js');
 var request = require("request");
 var striptags = require('striptags');
-const fs = require('fs');
+var fileSaver = require('../../FileSaver/FileSaver');
+const iconv = require('iconv-lite');
 
 module.exports = {
-  list: function(msg) {
+  list: function (msg) {
     //Something
     console.log(Date() + "Summer session module require");
     request({
       uri: "http://informatica.uniroma2.it/pages/trien/esami/dateEsami3.htm"
-    }, function(error, response, body) {
+    }, function (error, response, body) {
 
-      // File module
-      if (response == undefined || response.statusCode != '200') {
-        console.log("Huston, we've got some problems... \nThe site is offline!");
-        body = fs.readFileSync('./Server/LocalFiles/summer.txt', 'utf8')
-      } else {
-        fs.writeFile('./Server/LocalFiles/summer.txt', body, function(err) {
-          if (err) throw err;
-        });
-      }
-      // File module end
 
-      body = body.replace(/&nbsp;/gi, " ")
-      body = body.replace('null', ' ')
-      body = body.replace('�', 'e\'')
-      body = body.replace('�', 'e\'')
+      var utf8String = iconv.decode(new Buffer(body), "ISO-8859-1");
+      body = fileSaver.checkAndWrite(response, utf8String, './Server/LocalFiles/summer.txt');
+
 
       var insegnamento, docente, sData, sOra, sAula, oData, oOra, oAula
       var primo, secondo;

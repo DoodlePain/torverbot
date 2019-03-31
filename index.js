@@ -31,11 +31,13 @@ var fs = require('fs');
 // ✅  Notification system
 // ✅  Add response.statusCode error verification @ Schedule (Offline mode)
 // ✅  FULL Offline data system
+// ✅  Anywhere menu' turnaround
+// ✅  Full charset Support
 // ❌  News problem : If there are < 2 news it goes to the previous news page => USELESS UPDATE NEWS
 // ❌  2nd Session of each
 // ❌  Custom logo
-// ❌  Full charset Support
 // ❌  Perfomance update
+// ❌  FileSaver : Buffer issue deprecated
 // ❌  Bonus Challenge : Free classroom
 
 
